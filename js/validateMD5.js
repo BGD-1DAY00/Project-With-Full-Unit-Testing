@@ -1,12 +1,10 @@
 import { fetchData } from "../globals/global.js"
-import { testUndefinedNull } from "../globals/global.js"
 
 async function validateMD5(e, formTwo, secondResponseToUser){
     e.preventDefault()
     const val = formTwo.mdFive.value
-    const res = await fetchData(`http://md5.jsontest.com/?text=${val}`)
-    const {md5,original} = res
-    return respondToUserTwo(md5, original, secondResponseToUser)
+    const res = await fetchData([`http://md5.jsontest.com/?text=${val}`])
+    return respondToUserTwo(res[0].md5, res[0].original, secondResponseToUser)
 }
 function respondToUserTwo(md5, original, sec){
     const temp = `<div>

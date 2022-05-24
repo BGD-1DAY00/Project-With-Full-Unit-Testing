@@ -1,9 +1,11 @@
 import { validateJson } from "../js/validateJson.js";
 import { testUndefinedNull } from "../globals/global.js";
-import { respondToUserDisplay } from "../js/validateJson.js";
+import { respondToUserDisplay, validateJsonCall } from "../js/validateJson.js";
 
 
-const testJSON = async () => {
+
+//FIRST TEST
+const testValidateJSON = async () => {
   //Arrange
   const e = {
     preventDefault: () => {},
@@ -13,31 +15,77 @@ const testJSON = async () => {
       value: "{kj:li}",
     },
   };
+  const formFail = {
+    jsonValid: {
+      value: "sfd",
+    },
+  };
+
   const respondToUser = {
-    doc: "someDiv",
+    div: ` "someDiv"`,
   };
 
   //ACT
-  const result = await validateJson(e, form, respondToUser);
+  const passResult = await validateJson(e, form, respondToUser);
+  const passExpected = `<div>Validation: true</div>`;
+
+  const failResult = await validateJson(e, formFail, respondToUser);
+  const failExpected = `string`;
 
   //ASSERT
-  const expected = await validateJson(e, form, respondToUser);
-
-  result === expected
-    ? testUndefinedNull(result)
-      ? testUndefinedNull(expected)
-        ? console.log("testJSON: PASSED")
-        : console.log("testJSON: FAILED")
+  passResult === passExpected
+    ? typeof failResult === failExpected
+      ? testUndefinedNull(passResult)
+        ? testUndefinedNull(passExpected)
+          ? testUndefinedNull(failResult)
+            ? console.log("testJSON: PASSED")
+            : console.log("testJSON: FAILED")
+          : console.log("testJSON: FAIL")
+        : console.log("testJSON: FAIL")
       : console.log("testJSON: FAIL")
     : console.log("testJSON: FAIL");
 };
 
 
+//SECOND TEST
+const testValidateJsonCall = async() => {
+  const form = {
+    jsonValid: {
+      value: "{kj:li}",
+    },
+  };
+  const formb = {
+    jsonValid: {
+      value: "{kj:li",
+    },
+  };
+  const respondToUser = {
+    div: ``,
+  };
+  const SuccExpected = '<div>Validation: true</div>'
+  const stringResultExpected = 'string'
+  const failResultExpected = 'ValidationJsonCall: FAIL'
+  const succResult = await validateJsonCall(form, respondToUser)
+  const stringResult = await validateJsonCall(formb, respondToUser)
+  const failResult = await validateJsonCall(null, respondToUser)
 
+  succResult === SuccExpected
+    ? typeof stringResult === stringResultExpected
+      ? failResult === failResultExpected
+        ? testUndefinedNull(stringResult)
+          ? testUndefinedNull(succResult)
+            ? console.log("testJSON: PASSED")
+            : console.log("testJSON: FAILED")
+          : console.log("testJSON: FAIL")
+        : console.log("testJSON: FAIL")
+      : console.log("testJSON: FAIL")
+    : console.log("testJSON: FAIL");
+
+}
+
+// Third Test
 const testRespondToUserDisplay = async () => {
-
   //ARRANGE
-  let validate = true;
   const data = {
     error: "someString",
     error_info: "someString",
@@ -47,26 +95,24 @@ const testRespondToUserDisplay = async () => {
     innerHTML: ``,
   };
   const passExpected = `<div>Validation: true</div>`;
-  const failExpected = `<div>
-  <h3>someString</h3>
-  <h3>someString</h3>
-  <h3>It requires an: someString</h3>
-  </div>`;
+      const failExpected = `<div>
+          <h3>someString</h3>
+          <h3>someString</h3>
+          <h3>It requires an: someString</h3>
+          </div>`;
 
   //ACT
-  const result = await respondToUserDisplay(data, validate, respondToUser);
+  const result = await respondToUserDisplay(data, true, respondToUser);
+  const failResult = await respondToUserDisplay(data, false, respondToUser);
+
 
   //ASSERT
-  if(validate){
-    result === passExpected
+
+  result === passExpected
+    ? failResult === failExpected
       ? console.log("testRespondToUserDisplay: PASSED")
       : console.log("testRespondToUserDisplay: FAIL")
-  }else{
-    result === failExpected
-      ? console.log("PASSED")
-      : console.log("FAIL")
-  }
-
+    : console.log("testRespondToUserDisplay: FAIL");
 };
 
-export{testJSON, testRespondToUserDisplay}
+export { testValidateJSON, testRespondToUserDisplay,testValidateJsonCall};

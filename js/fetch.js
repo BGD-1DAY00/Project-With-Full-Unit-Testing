@@ -10,27 +10,32 @@ const retriveIp = async () => {
     ]);
     return disData(res);
   } catch (error) {
-    throw new Error("retriveIP: FAILED; js/fetch.js");
+    return "retriveIP: FAILED; js/fetch.js";
   }
 };
 //pass in wrong number of args
 
 const fetData = async (arr) => {
   try {
+    if(typeof arr !== 'object'){
+        throw new Error()
+    }
     const res = await fetchData(arr);
     const allData = {
       ip: res[0],
       http: res[1],
       dateAndTime: res[2],
     };
+    //console.log(allData)
     return allData;
   } catch (error) {
-    throw new Error("fetData: FAILED; js/fetch.js");
+    return "fetData: FAILED; js/fetch.js";
   }
 };
 
 //Displays Data
 const disData = (data) => {
+
   const { ip, http, dateAndTime } = data;
   const {
     Accept,
@@ -40,10 +45,9 @@ const disData = (data) => {
     Referer,
     "User-Agent": userAgent,
     "X-Cloud-Trace-Context": xCloudTrace,
-    traceparent,
+    traceparent
   } = http;
   const { date } = dateAndTime;
-
   const temp = `<div>
   <h1>IP</h1>
   <h4>${ip.ip}</h4>
@@ -53,14 +57,28 @@ const disData = (data) => {
   <h4>${Host}</h4>
   <h4>${Origin}</h4>
   <h4>${Referer}</h4>
+  <h4>${xCloudTrace}</h4>
+  <h4>${traceparent}</h4>
+  <h4>${userAgent}</h4>
   <h1>Time</h1>
   <h4>${date}</h4>
   </div>`;
-  return temp;
+  return {temp};
 };
 
-export const displayMain = async () => {
-  display.innerHTML = await retriveIp();
-};
 
-export{fetData, retriveIp, disData}
+
+const displayMain = async () => {
+  const {temp}= await retriveIp();
+  return display.innerHTML = temp
+};
+async function tempTimeDisplay(timeDisplay){
+  const res = await fetchData(["http://date.jsontest.com"])
+  const tempTime = `
+  <h4>${res[0].time}</h4>
+  `
+  timeDisplay.innerHTML = tempTime
+}
+
+
+export{fetData, retriveIp, disData, displayMain, tempTimeDisplay}

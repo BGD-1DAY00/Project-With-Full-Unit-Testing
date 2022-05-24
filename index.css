@@ -1,25 +1,31 @@
-#time{
+/* #time{
     font-size: 1rem;
     color: black;
     margin-top: 1rem;
     font-weight: 900;
-    margin-left: 14.7rem;
+    margin-right: 19rem;
     
-}
+} */
 form{
     margin-bottom: 2rem;
 }
 body{
     background-color: cornsilk;
+   
 }
-#display{
+#displayHome, #display{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     background-color: cornsilk;
-
+    width: 100%;
 }
+#heading{
+    outline: 1px red solid;
+    padding: 1rem;
+}
+
 button{
     background:none;
     border: .7px solid black;
